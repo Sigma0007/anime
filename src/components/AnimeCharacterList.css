@@ -79,3 +79,35 @@
 .infinite-scroll-component {
   overflow: visible !important;
 }
+/* Add these new styles */
+.controls {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.search-input {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  font-size: 14px;
+  width: 200px;
+  transition: all 0.3s ease;
+}
+
+.dark-mode .search-input {
+  background-color: #2d2d2d;
+  border-color: #404040;
+  color: white;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #4a90e2;
+  box-shadow: 0 0 5px rgba(74, 144, 226, 0.3);
+}
+
+.dark-mode .search-input:focus {
+  border-color: #6ab0ff;
+  box-shadow: 0 0 5px rgba(106, 176, 255, 0.3);
+}
