@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { motion } from "framer-motion";
 import { useTheme } from "../context/ThemeContext";
+import CharacterCard from "./CharacterCard";
 import "./AnimeCharacterList.css";
 
 const AnimeCharacterList = () => {
@@ -10,12 +11,14 @@ const AnimeCharacterList = () => {
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
+  const [itemsPerPage, setItemsPerPage] = useState(20);
+  const [sortBy, setSortBy] = useState("name");
   const { darkMode, toggleDarkMode } = useTheme();
 
   const fetchCharacters = async () => {
     try {
       const response = await fetch(
-        `https://api.jikan.moe/v4/characters?page=${page}&limit=20&q=${searchQuery}`
+        `https://api.jikan.moe/v4/characters?page=${page}&limit=${itemsPerPage}&q=${searchQuery}&order_by=${sortBy}`
       );
       const data = await response.json();
       
@@ -42,10 +45,18 @@ const AnimeCharacterList = () => {
     setHasMore(true);
     setCharacters([]);
     fetchCharacters();
-  }, [searchQuery]);
+  }, [searchQuery, itemsPerPage, sortBy]);
 
   const handleSearch = (e) => {
     setSearchQuery(e.target.value);
+  };
+
+  const handleItemsPerPageChange = (e) => {
+    setItemsPerPage(Number(e.target.value));
+  };
+
+  const handleSortChange = (e) => {
+    setSortBy(e.target.value);
   };
 
   return (
@@ -60,6 +71,23 @@ const AnimeCharacterList = () => {
             onChange={handleSearch}
             className="search-input"
           />
+          <select 
+            value={itemsPerPage} 
+            onChange={handleItemsPerPageChange}
+            className="select-input"
+          >
+            <option value="10">10 per page</option>
+            <option value="20">20 per page</option>
+            <option value="50">50 per page</option>
+          </select>
+          <select 
+            value={sortBy} 
+            onChange={handleSortChange}
+            className="select-input"
+          >
+            <option value="name">Sort by Name</option>
+            <option value="favorites">Sort by Popularity</option>
+          </select>
           <button onClick={toggleDarkMode} className="theme-toggle">
             {darkMode ? '☀️' : '🌙'}
           </button>
@@ -82,15 +110,7 @@ const AnimeCharacterList = () => {
             animate={{ opacity: 1 }}
           >
             {characters.map((char) => (
-              <motion.div
-                key={char.mal_id}
-                className="card"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <img src={char.images.jpg.image_url} alt={char.name} />
-                <h3>{char.name}</h3>
-              </motion.div>
+              <CharacterCard key={char.mal_id} character={char} />
             ))}
           </motion.div>
         </InfiniteScroll>

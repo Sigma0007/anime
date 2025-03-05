@@ -91,8 +91,8 @@
   border: 1px solid #ddd;
   border-radius: 20px;
   font-size: 14px;
-  width: 200px;
-  transition: all 0.3s ease;
+  background-color: white;
+  cursor: pointer;
 }
 
 .dark-mode .search-input {
@@ -100,14 +100,50 @@
   border-color: #404040;
   color: white;
 }
+.fav-btn {
+  background-color: #ff4d4d;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  cursor: pointer;
+  margin-top: 10px;
+  border-radius: 20px;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
 
+.fav-btn:hover {
+  background-color: #e60000;
+  transform: scale(1.05);
+}
+
+.dark-mode .fav-btn {
+  background-color: #ff6b6b;
+}
+
+.dark-mode .fav-btn:hover {
+  background-color: #ff4d4d;
+}
 .search-input:focus {
   outline: none;
   border-color: #4a90e2;
   box-shadow: 0 0 5px rgba(74, 144, 226, 0.3);
 }
-
 .dark-mode .search-input:focus {
   border-color: #6ab0ff;
   box-shadow: 0 0 5px rgba(106, 176, 255, 0.3);
+}
+.select-input:focus {
+  outline: none;
+  border-color: #4a90e2;
+}
+
+.favorites {
+  margin-top: 5px;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.dark-mode .favorites {
+  color: #aaa;
 }
