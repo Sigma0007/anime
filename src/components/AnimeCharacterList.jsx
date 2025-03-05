@@ -1,65 +1,95 @@
 import React, { useEffect, useState } from "react";
+import InfiniteScroll from "react-infinite-scroll-component";
+import { motion } from "framer-motion";
+import { useTheme } from "../context/ThemeContext";
 import "./AnimeCharacterList.css";
 
 const AnimeCharacterList = () => {
   const [characters, setCharacters] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
-  const ITEMS_PER_PAGE = 10;
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const { darkMode, toggleDarkMode } = useTheme();
 
-  useEffect(() => {
-    fetchCharacters(currentPage);
-  }, [currentPage]);
-
-  const fetchCharacters = async (page) => {
-    setLoading(true);
+  const fetchCharacters = async () => {
     try {
       const response = await fetch(
-        `https://api.jikan.moe/v4/characters?page=${page}&limit=${ITEMS_PER_PAGE}`
+        `https://api.jikan.moe/v4/characters?page=${page}&limit=20`
       );
       const data = await response.json();
-      setCharacters(data.data);
-      setTotalPages(Math.ceil(data.pagination.items.total / ITEMS_PER_PAGE));
+      
+      if (data.data.length === 0) {
+        setHasMore(false);
+        return;
+      }
+
+      setCharacters(prev => [...prev, ...data.data]);
+      setPage(prev => prev + 1);
     } catch (error) {
       console.error("Error fetching data:", error);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
+  };
+
+  useEffect(() => {
+    fetchCharacters();
+  }, []);
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1
+    }
   };
 
   return (
-    <div className="container">
-      <h2>Anime Characters</h2>
-      {loading ? (
-        <p>Loading...</p>
-      ) : (
-        <div className="grid">
-          {characters.map((char) => (
-            <div key={char.mal_id} className="card">
-              <img src={char.images.jpg.image_url} alt={char.name} />
-              <h3>{char.name}</h3>
-            </div>
-          ))}
-        </div>
-      )}
-
-      <div className="pagination">
-        <button
-          disabled={currentPage === 1}
-          onClick={() => setCurrentPage((prev) => prev - 1)}
-        >
-          Previous
-        </button>
-        <span>
-          Page {currentPage} of {totalPages}
-        </span>
-        <button
-          disabled={currentPage === totalPages}
-          onClick={() => setCurrentPage((prev) => prev + 1)}
-        >
-          Next
+    <div className={`container ${darkMode ? 'dark-mode' : ''}`}>
+      <div className="header">
+        <h2>Anime Characters</h2>
+        <button onClick={toggleDarkMode} className="theme-toggle">
+          {darkMode ? '☀️' : '🌙'}
         </button>
       </div>
+
+      <InfiniteScroll
+        dataLength={characters.length}
+        next={fetchCharacters}
+        hasMore={hasMore}
+        loader={<h4>Loading...</h4>}
+        endMessage={<p>No more characters to load.</p>}
+      >
+        <motion.div
+          className="grid"
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+        >
+          {characters.map((char) => (
+            <motion.div
+              key={char.mal_id}
+              className="card"
+              variants={itemVariants}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <img src={char.images.jpg.image_url} alt={char.name} />
+              <h3>{char.name}</h3>
+            </motion.div>
+          ))}
+        </motion.div>
+      </InfiniteScroll>
     </div>
   );
 };

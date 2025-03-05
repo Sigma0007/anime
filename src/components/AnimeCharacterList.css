@@ -3,6 +3,43 @@
   margin: 0 auto;
   padding: 20px;
   text-align: center;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.dark-mode {
+  background-color: #1a1a1a;
+  color: #ffffff;
+}
+
+.dark-mode .card {
+  background-color: #2d2d2d;
+  border-color: #404040;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding: 0 20px;
+}
+
+.theme-toggle {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  transition: background-color 0.3s;
+}
+
+.theme-toggle:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.dark-mode .theme-toggle:hover {
+  background-color: rgba(255, 255, 255, 0.1);
 }
 
 .grid {
@@ -14,57 +51,31 @@
 
 .card {
   border: 1px solid #ddd;
-  padding: 10px;
-  border-radius: 8px;
+  padding: 15px;
+  border-radius: 12px;
   background: #fff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s;
-}
-
-.card:hover {
-  transform: translateY(-5px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
 }
 
 .card img {
   width: 100%;
   height: auto;
-  border-radius: 5px;
+  border-radius: 8px;
   margin-bottom: 10px;
 }
 
 .card h3 {
   margin: 0;
   font-size: 1rem;
-  color: #333;
+  color: inherit;
 }
 
-.pagination {
-  margin-top: 30px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 15px;
+/* Loading Animation */
+.infinite-scroll-component__outerdiv {
+  width: 100%;
 }
 
-.pagination button {
-  padding: 8px 16px;
-  border: none;
-  background-color: #4a90e2;
-  color: white;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.pagination button:disabled {
-  background-color: #cccccc;
-  cursor: not-allowed;
-}
-
-.pagination button:hover:not(:disabled) {
-  background-color: #357abd;
-}
-
-.pagination span {
-  color: #666;
+.infinite-scroll-component {
+  overflow: visible !important;
 }
